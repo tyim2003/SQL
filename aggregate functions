@@ -1,0 +1,47 @@
+
+/* data in the fake_apps table */
+
+SELECT *
+FROM fake_apps;
+
+/* count how many apps are in the database */
+
+SELECT COUNT(*) 
+FROM fake_apps;
+
+/* add add the values in download */
+
+SELECT SUM(downloads)
+From fake_apps;
+
+/* returns the price of the most expensive app */
+
+SELECT MAX(price)
+FROM fake_apps;
+
+/* calculates the average price of an app in the database */
+SELECT AVG(price)
+FROM fake_apps;
+
+/* rounds the result to 2 decimal place */
+SELECT ROUND(AVG(price), 2)
+FROM fake_apps;
+
+/* calculates the total number of downloads for each category */
+SELECT category, SUM(downloads)
+FROM fake_apps
+GROUP BY category;
+
+/* a new query that uses column reference numbers */
+SELECT category, 
+   price,
+   AVG(downloads)
+FROM fake_apps
+GROUP BY category, price;
+
+/* new query, restrict it to prices where the total number of apps at that price point is greater than 9 */
+SELECT price, 
+    ROUND(AVG(downloads))
+ FROM fake_apps
+ GROUP BY price
+ HAVING COUNT(*) > 9;
