@@ -1,0 +1,110 @@
+/* examining the tables below */
+SELECT * 
+FROM orders;
+
+SELECT *
+FROM subscriptions;
+
+SELECT *
+FROM customers;
+
+/* Join orders and subscriptions (join on subscription_id) and select all columns */
+
+SELECT *
+FROM orders
+JOIN subscriptions
+    ON orders.subscription_id = subscriptions.subscription_id;
+    
+/* selects rows from the join where description is equal to 'Fashion Magazine' */
+SELECT *
+FROM orders
+JOIN subscriptions
+    ON orders.subscription_id = subscriptions.subscription_id
+    WHERE description = 'Fashion Magazine';
+    
+/* Join newspaper and online on id */
+
+SELECT COUNT(*)
+from newspaper;
+
+SELECT COUNT(*)
+from online;
+
+SELECT COUNT(*)
+FROM newspaper
+JOIN online
+    ON newspaper.id = online.id;
+
+/* a left join of newspaper and online and selecting all columns */
+
+SELECT *
+FROM newspaper
+LEFT JOIN online
+  ON newspaper.id = online.id;
+
+/* to find which users do not subscribe to the online edition */
+SELECT *
+FROM newspaper
+LEFT JOIN online
+  ON newspaper.id = online.id
+WHERE online.id IS NULL;
+
+/* an inner join of classes and students using the primary and foreign keys described above, and select all columns */
+
+SELECT *
+FROM classes
+JOIN students
+  ON classes.id = students.id;
+  
+SELECT *
+FROM classes
+JOIN students
+  ON classes.id = students.class_id;
+  
+/* count the number of customers who were subscribed to the newspaper during March (3),
+and select all columns from the cross join of newspaper and months,
+and add a where statement to the cross join */
+
+SELECT COUNT(*)
+FROM newspaper
+WHERE start_month < 3
+AND end_month > 3;
+
+SELECT *
+FROM newspaper
+CROSS JOIN months;
+
+SELECT *
+FROM newspaper
+CROSS JOIN months
+WHERE month > start_month
+AND month < end_month;
+
+/* aggregate over each month */
+SELECT month,
+  COUNT(*) as subscribers
+FROM newspaper
+CROSS JOIN months
+WHERE month > start_month
+  AND month < end_month
+GROUP BY month;
+
+/* Use UNION to combine newspaper and online */
+SELECT *
+FROM newspaper
+UNION
+SELECT *
+FROM online;
+
+/* Join previous_query with customers and select the columns customers.customer_name and previous_query.subscriptions */
+
+WITH previous_query AS (
+SELECT customer_id,
+       COUNT(subscription_id) as subscriptions
+FROM orders
+GROUP BY customer_id)
+SELECT customers.customer_name,
+previous_query.subscriptions
+FROM previous_query
+JOIN customers
+	ON customers.customer_id = previous_query.customer_id;
